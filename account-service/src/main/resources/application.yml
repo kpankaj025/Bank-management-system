@@ -1,0 +1,34 @@
+spring:
+  application:
+    name: account-service
+  profiles:
+    active: dev
+  config:
+    import: configserver:http://localhost:8085
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: admin
+    password: admin
+  
+  cloud:
+    stream:
+      bindings:
+        emailProducer-out-0:
+          destination: notification.exchange
+          content-type: application/json
+          
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+resilience4j:
+  ratelimiter:
+    instances:
+      accountServiceRateLimiter:
+        limit-for-period: 1
+        limit-refresh-period: 10s
+        timeout-duration: 0ms

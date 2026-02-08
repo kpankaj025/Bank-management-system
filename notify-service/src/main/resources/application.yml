@@ -1,0 +1,56 @@
+server:
+  port: 8086
+
+spring:
+  application:
+    name: notify-service
+
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: admin
+    password: admin
+
+  cloud:
+    function:
+      definition: emailConsumer;dailyEmail
+
+    stream:
+      bindings:
+        emailConsumer-in-0:
+          destination: notification.exchange
+          group: notify-group
+          content-type: application/json
+
+        dailyEmail-in-0:
+          destination: daily.event
+          group: daily-group
+          content-type: application/json
+
+      rabbit:
+        bindings:
+          emailConsumer-in-0:
+            consumer:
+              auto-bind-dlq: true
+          dailyEmail-in-0:
+            consumer:
+              auto-bind-dlq: true
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: kpankaj766786@gmail.com
+    password: bzzftzrpifxihiae
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true
