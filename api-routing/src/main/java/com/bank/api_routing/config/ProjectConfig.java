@@ -1,5 +1,6 @@
 package com.bank.api_routing.config;
 
+import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.cloud.gateway.filter.ratelimit.KeyResolver;
 import org.springframework.cloud.gateway.filter.ratelimit.RedisRateLimiter;
 import org.springframework.cloud.gateway.route.RouteLocator;
@@ -7,6 +8,8 @@ import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.web.reactive.function.client.WebClient;
+
 import reactor.core.publisher.Mono;
 import java.time.Duration;
 
@@ -68,5 +71,12 @@ public class ProjectConfig {
         @Bean
         public RedisRateLimiter redisRateLimiter() {
                 return new RedisRateLimiter(17, 1000, 1);
+        }
+
+        @LoadBalanced
+        @Bean
+        public WebClient.Builder webClient() {
+
+                return WebClient.builder();
         }
 }

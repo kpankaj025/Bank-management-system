@@ -25,7 +25,7 @@ spring:
             locator:
               enabled: true
           httpclient:
-            connect-timeout: 2000
+            connect-timeout: 20000
             response-timeout: 5s
 
 

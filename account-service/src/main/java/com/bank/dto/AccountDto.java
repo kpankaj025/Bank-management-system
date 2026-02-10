@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import com.bank.entity.Address;
+import com.bank.entity.enums.UserRole;
 import com.bank.util.ValidGender;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -41,6 +42,8 @@ public class AccountDto {
     private String userName;
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String accountNumber;
+    private UserRole role;
+    private String password;
 
     private Address address;
 

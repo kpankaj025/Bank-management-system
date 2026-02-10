@@ -7,6 +7,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import com.bank.entity.enums.AccountType;
+import com.bank.entity.enums.UserRole;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -34,6 +35,7 @@ public class Account {
     private String lastName;
 
     private LocalDate dateOfBirth;
+    @Column(unique = true, nullable = false)
     private String email;
     private String gender;
     private String addharNumber;
@@ -46,6 +48,8 @@ public class Account {
     @Column(unique = true, nullable = false)
     private String accountNumber;
 
+    @Enumerated(EnumType.STRING)
+    private UserRole role;
     @Embedded
     private Address address;
 

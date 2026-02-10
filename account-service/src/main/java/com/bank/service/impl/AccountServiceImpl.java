@@ -3,11 +3,13 @@ package com.bank.service.impl;
 import java.util.Date;
 import java.util.List;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.messaging.Message;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,6 +20,7 @@ import com.bank.dto.FileData;
 import com.bank.dto.RegistrationDto;
 import com.bank.entity.Account;
 import com.bank.entity.enums.AccountType;
+import com.bank.entity.enums.UserRole;
 import com.bank.exception.ResourceNotFoundException;
 import com.bank.repository.AccountRepo;
 import com.bank.service.AccountService;
@@ -26,6 +29,9 @@ import com.bank.util.Helper;
 
 @Service
 public class AccountServiceImpl implements AccountService {
+
+    @Autowired
+    public PasswordEncoder passwordEncoder;
 
     private FileUpload fileUpload;
     private final AccountNumberGenerator accountNumberGenerator;
@@ -50,8 +56,9 @@ public class AccountServiceImpl implements AccountService {
         account.setFirstName(registrationDto.getFirstName());
         account.setLastName(registrationDto.getLastName());
         account.setEmail(registrationDto.getEmail());
-        account.setPassword(registrationDto.getPassword());
+        account.setPassword(passwordEncoder.encode(registrationDto.getPassword()));
         account.setAccountNumber(accountNumberGenerator.generateAccountNumber());
+        account.setRole(UserRole.ROLE_CUSTOMER);
         Account savedAccount = accountRepo.save(account);
 
         EmailDto emailDto = new EmailDto(savedAccount.getEmail(), "Account Created",
