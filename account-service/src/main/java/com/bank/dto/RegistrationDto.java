@@ -2,6 +2,8 @@ package com.bank.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,6 +17,9 @@ public class RegistrationDto {
 
     private String firstName;
     private String lastName;
+
+    @NotBlank(message = "email is necessary")
+    @Email(message = "enter valid email address")
     private String email;
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;

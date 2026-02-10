@@ -1,5 +1,11 @@
 package com.bank.entity;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import com.bank.entity.enums.AccountType;
 
 import jakarta.persistence.Column;
@@ -27,7 +33,7 @@ public class Account {
     private String firstName;
     private String lastName;
 
-    private String dateOfBirth;
+    private LocalDate dateOfBirth;
     private String email;
     private String gender;
     private String addharNumber;
@@ -45,4 +51,9 @@ public class Account {
 
     private String profileImageUrl;
 
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
 }

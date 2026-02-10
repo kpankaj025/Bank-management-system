@@ -1,0 +1,13 @@
+
+spring:
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: kpankaj766786@gmail.com
+    password: "{cipher}a9f1ab09b8a37736340c833b20d71ece3cb2b19c868c35aa1914e5c58d1577a98eecd61d502530cfb0b23449c65b8e59"
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true

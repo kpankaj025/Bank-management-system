@@ -5,6 +5,10 @@ spring:
   application:
     name: notify-service
 
+  config:
+    import: configserver:http://localhost:8085
+  profiles:
+    active: dev
   rabbitmq:
     host: localhost
     port: 5672
@@ -36,17 +40,6 @@ spring:
             consumer:
               auto-bind-dlq: true
 
-  mail:
-    host: smtp.gmail.com
-    port: 587
-    username: kpankaj766786@gmail.com
-    password: xxxxxxxxxx
-    properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: true
 
 eureka:
   client:

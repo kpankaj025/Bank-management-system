@@ -1,11 +1,15 @@
 package com.bank.dto;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import com.bank.entity.Address;
+import com.bank.util.ValidGender;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,9 +26,13 @@ public class AccountDto {
 
     private String firstName;
     private String lastName;
+    @Email(message = "please enter a valid email address")
     private String email;
+    @ValidGender(message = " please select: male| female|other")
     private String gender;
     private String addharNumber;
+
+    @NotBlank(message = "mandatory to enter pan number")
     private String panNumber;
     private String phoneNumber;
 
@@ -39,4 +47,8 @@ public class AccountDto {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String profileImageUrl;
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private LocalDateTime createdAt;
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private LocalDateTime updatedAt;
 }

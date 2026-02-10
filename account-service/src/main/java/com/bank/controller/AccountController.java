@@ -4,6 +4,10 @@ import java.util.Collections;
 import java.util.List;
 
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.MediaTypeFactory;
@@ -25,7 +29,7 @@ import com.bank.entity.enums.AccountType;
 import com.bank.service.AccountService;
 
 import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
-import jakarta.ws.rs.core.Response;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/v1/accounts")
@@ -38,7 +42,7 @@ public class AccountController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<RegistrationDto> registerAccount(@RequestBody RegistrationDto registrationDto) {
+    public ResponseEntity<RegistrationDto> registerAccount(@Valid @RequestBody RegistrationDto registrationDto) {
 
         if (!registrationDto.getPassword().equals(registrationDto.getConfirmPassword())) {
             throw new IllegalArgumentException("Password and Confirm Password do not match");
@@ -68,7 +72,7 @@ public class AccountController {
     }
 
     @PostMapping
-    public ResponseEntity<AccountDto> createAccount(@RequestBody AccountDto accountDto) {
+    public ResponseEntity<AccountDto> createAccount(@Valid @RequestBody AccountDto accountDto) {
         AccountDto createdAccount = accountService.createAccount(accountDto);
         return ResponseEntity.ok(createdAccount);
     }
@@ -166,4 +170,19 @@ public class AccountController {
         return new ResponseEntity<>(acc, HttpStatus.OK);
     }
 
+    // get accounts in pages filtered
+
+    @GetMapping("/filtered")
+    public ResponseEntity<Page<AccountDto>> getFilteredAccount(
+            @RequestParam(value = "page", required = false, defaultValue = "0") int page,
+            @RequestParam(value = "size", required = false, defaultValue = "10") int size,
+            @RequestParam(value = "sortBy", required = false, defaultValue = "createdAt") String sortBy,
+            @RequestParam(value = "sortDir", required = false, defaultValue = "desc") String sortDir) {
+
+        Sort sort = sortDir.equalsIgnoreCase(sortDir) ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+        Page<AccountDto> pages = accountService.getFilteredAccount(pageable);
+        return new ResponseEntity<>(pages, HttpStatus.OK);
+
+    }
 }

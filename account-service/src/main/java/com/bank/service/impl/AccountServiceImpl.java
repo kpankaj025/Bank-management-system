@@ -5,8 +5,9 @@ import java.util.List;
 import org.modelmapper.ModelMapper;
 import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.messaging.Message;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -91,8 +92,17 @@ public class AccountServiceImpl implements AccountService {
 
         Account existingAcc = accountRepo.findById(accountId)
                 .orElseThrow(() -> new RuntimeException("Account not found"));
+
         existingAcc.setAddharNumber(accountDto.getAddharNumber());
-        return modelMapper.map(existingAcc, AccountDto.class);
+        existingAcc.setPanNumber(accountDto.getPanNumber());
+        existingAcc.setUserName(accountDto.getUserName());
+        existingAcc.setGender(accountDto.getGender());
+        existingAcc.setAddress(accountDto.getAddress());
+        existingAcc.setDateOfBirth(accountDto.getDateOfBirth());
+        existingAcc.setPhoneNumber(accountDto.getPhoneNumber());
+        Account savedAcc = accountRepo.save(existingAcc);
+
+        return modelMapper.map(savedAcc, AccountDto.class);
     }
 
     @Override
@@ -190,6 +200,14 @@ public class AccountServiceImpl implements AccountService {
         Resource resource = fileUpload.loadFile(Constants.PROFILE_PATH + path);
         return resource;
 
+    }
+
+    @Override
+    public Page<AccountDto> getFilteredAccount(Pageable pageable) {
+
+        Page<Account> page = accountRepo.findAll(pageable);
+        Page<AccountDto> pages = page.map(p -> modelMapper.map(p, AccountDto.class));
+        return pages;
     }
 
 }
